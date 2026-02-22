@@ -12,20 +12,37 @@ def get_api_key() -> str:
         sys.exit(1)
     return key
 
-def test_tmdb_connection() -> None:
+def fetch_drama(tmdb_id: int) -> None:
     key = get_api_key()
-    url = "https://api.themoviedb.org/3/configuration"
+    url = f"https://api.themoviedb.org/3/tv/{tmdb_id}"
 
     response = requests.get(
         url,
-        params={"api_key": key},
+        params={
+            "api_key": key,
+            "language": 'en-US'
+        },
         timeout=10
     )
 
     # successful connection would be status 200 
-    # and content length of ~1000 bytes
-    print(f"Status: {response.status_code}")
-    print(f"Content length: {len(response.text)} bytes")
+    if response.status_code != 200:
+        print(f"failed response: {response.text}")
+        return
+    
+    data = response.json()
+
+    print(f"-- drama details --")
+    print(f"tmdb id: {data.get('id')}")
+    print(f"name: {data.get('name')}")
+    print(f"original name: {data.get('original_name')}")
+    print(f"original lang: {data.get('original_language')}")
+    print(f"country: {data.get('origin_country')}")
+    print(f"episode count: {data.get('number_of_episodes')}")
+    print(f"description: {data.get('overview', '')[:200]}...")
+    print(f"genres: {[g['name'] for g in data.get('genres', [])]}")
+    
 
 if __name__ == "__main__":
-    test_tmdb_connection()
+    # 127358 is ID for The Veil (검은 태양)
+    fetch_drama(127358)
