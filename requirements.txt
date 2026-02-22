@@ -1,0 +1,11 @@
+# HTTP requests to TMDB API
+requests==2.31.0
+
+# Data validation and serialization
+pydantic==2.5.3
+
+# PostgreSQL database adapter
+psycopg2-binary==2.9.9
+
+# Environment variable management
+python-dotenv==1.0.0
