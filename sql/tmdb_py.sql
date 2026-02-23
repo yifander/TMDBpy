@@ -26,11 +26,37 @@ create table if not exists drama_titles (
     title_id UUID primary key default uuid_generate_v4(),
     drama_id UUID not null references dramas(drama_id) on delete cascade,
     title_type varchar(20) not null,
-    language_code varchar(5) not null,
+    language_code varchar(10) not null,
     title text not null,
     is_primary boolean default FALSE,
     created_at timestamptz default now(),
     
     constraint chk_title_type check (title_type in ('original', 'english', 'romanized', 'aka', 'synonym')),
     unique(drama_id, title_type, language_code, title)
+);
+
+create table if not exists people (
+    person_id UUID primary key default uuid_generate_v4(),
+    tmdb_id integer unique,
+    gender integer,
+    birth_date date,
+    death_date date,
+    biography text,
+    place_of_birth text,
+    tmdb_popularity decimal(10,3),
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+
+create table if not exists person_names (
+    name_id UUID primary key default uuid_generate_v4(),
+    person_id UUID not null references people(person_id) on delete cascade,
+    name_type varchar(20) not null,
+    language_code varchar(10) not null,
+    name text not null,
+    is_primary boolean default FALSE,
+    created_at timestamptz default now(),
+
+    constraint chk_name_type check (name_type in ('original', 'english', 'romanized', 'aka')),
+    UNIQUE(person_id, name_type, language_code, name)
 );
