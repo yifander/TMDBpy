@@ -3,7 +3,7 @@ import sys
 from dotenv import load_dotenv
 import requests
 
-from models.drama_model import Drama
+from models import Drama
 
 load_dotenv()
 

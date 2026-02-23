@@ -4,7 +4,7 @@ import sys
 import requests
 from dotenv import load_dotenv
 
-from models.person_model import Person
+from models import Person
 
 load_dotenv()
 
