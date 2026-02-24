@@ -1,3 +1,4 @@
+from typing import Dict, List
 from models import Drama
 from tmdb.client import make_request
 
@@ -7,6 +8,10 @@ def fetch_drama(tmdb_id: int) -> Drama:
     
 def fetch_credits(tmdb_id: int) -> dict:
     return make_request(f"tv/{tmdb_id}/credits")
+
+def fetch_episodes(tmdb_id: int, season_number: int = 1) -> List[Dict]:
+    data = make_request(f"tv/{tmdb_id}/season/{season_number}")
+    return data.get("episodes", [])
 
 if __name__ == "__main__":
     # 127358 is ID for The Veil (검은 태양)

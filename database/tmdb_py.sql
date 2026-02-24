@@ -82,3 +82,20 @@ create table if not exists drama_crew (
     created_at timestamptz default now(),
     unique(drama_id, person_id, job)
 );
+
+create table if not exists episodes (
+    episode_id UUID primary key default uuid_generate_v4(),
+    drama_id UUID not null references dramas(drama_id) on delete cascade,
+    season_number smallint not null default 1,
+    episode_number smallint not null,
+    title text,
+    synopsis text,
+    air_date date,
+    runtime integer,
+    tmdb_rating decimal(3,1),
+    tmdb_vote_count integer,
+    still_image_path text,
+    created_at timestamptz default now(),
+    
+    unique(drama_id, season_number, episode_number)
+);
