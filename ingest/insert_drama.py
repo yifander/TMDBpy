@@ -3,7 +3,7 @@ from typing import Optional
 
 from database import get_connection
 from models import Drama
-from tmdb import fetch_drama
+from tmdb.drama_api import fetch_drama
 
 
 def insert_drama(drama: Drama) -> Optional[str]:

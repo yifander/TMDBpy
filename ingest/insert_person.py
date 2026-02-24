@@ -3,7 +3,7 @@ from typing import Optional
 
 from database import get_connection
 from models import Person
-from tmdb import fetch_person
+from tmdb.person_api import fetch_person
 
 def insert_person(person: Person) -> Optional[str]:
     conn = None
