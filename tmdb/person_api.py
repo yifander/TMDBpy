@@ -1,36 +1,9 @@
-import os
-import sys
-
-import requests
-from dotenv import load_dotenv
-
 from models import Person
-
-load_dotenv()
-
-def get_api_key() -> str:
-    key = os.getenv("TMDB_API_KEY")
-    if not key:
-        print("error: api key not valid or missing")
-        sys.exit(1)
-    return key
+from tmdb.client import make_request
 
 def fetch_person(tmdb_person_id: int) -> Person:
-    key = get_api_key()
-    url = f"https://api.themoviedb.org/3/person/{tmdb_person_id}"
-
-    response = requests.get(
-        url,
-        params={"api_key": key, "language": "en-US"},
-        timeout=10
-    )
-
-    if response.status_code != 200:
-        print(f"fail: {response.text}")
-        sys.exit(1)
-    
-    person = Person.from_tmdb_response(response.json())
-    return person
+    data = make_request(f"person/{tmdb_person_id}")
+    return Person.from_tmdb_response(data)
 
 if __name__ == "__main__":
     # Namkoong Min (남궁민)

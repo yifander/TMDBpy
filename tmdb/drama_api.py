@@ -1,39 +1,9 @@
-import os
-import sys
-from dotenv import load_dotenv
-import requests
-
 from models import Drama
-
-load_dotenv()
-
-def get_api_key() -> str:
-    key = os.getenv("TMDB_API_KEY")
-    if not key:
-        print("Error: api key not included in env")
-        sys.exit(1)
-    return key
+from tmdb.client import make_request
 
 def fetch_drama(tmdb_id: int) -> Drama:
-    key = get_api_key()
-    url = f"https://api.themoviedb.org/3/tv/{tmdb_id}"
-
-    response = requests.get(
-        url,
-        params={
-            "api_key": key,
-            "language": 'en-US'
-        },
-        timeout=10
-    )
-
-    # successful connection would be status 200 
-    if response.status_code != 200:
-        print(f"failed response: {response.text}")
-        return
-    
-    drama = Drama.from_tmdb_response(response.json())
-    return drama
+    data = make_request(f"tv/{tmdb_id}", params={"language": "en-US"})
+    return Drama.from_tmdb_response(data)
     
 
 if __name__ == "__main__":
