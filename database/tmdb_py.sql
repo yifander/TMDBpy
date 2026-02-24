@@ -60,3 +60,25 @@ create table if not exists person_names (
     constraint chk_name_type check (name_type in ('original', 'english', 'romanized', 'aka')),
     UNIQUE(person_id, name_type, language_code, name)
 );
+
+create table if not exists drama_cast (
+    cast_id UUID primary key default uuid_generate_v4(),
+    drama_id UUID not null references dramas(drama_id) on delete cascade,
+    person_id UUID not null references people(person_id) on delete cascade,
+    character_name text,
+    order_index smallint,
+    is_main_cast boolean default FALSE,
+    created_at timestamptz default now(),
+    unique(drama_id, person_id, character_name)
+);
+
+create table if not exists drama_crew (
+    crew_id UUID primary key default uuid_generate_v4(),
+    drama_id UUID not null references dramas(drama_id) on delete cascade,
+    person_id UUID not null references people(person_id) on delete cascade,
+    job varchar(100) not null,
+    department varchar(50),
+    is_key_creator boolean default FALSE,
+    created_at timestamptz default now(),
+    unique(drama_id, person_id, job)
+);

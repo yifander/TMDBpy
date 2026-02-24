@@ -5,6 +5,8 @@ def fetch_drama(tmdb_id: int) -> Drama:
     data = make_request(f"tv/{tmdb_id}", params={"language": "en-US"})
     return Drama.from_tmdb_response(data)
     
+def fetch_credits(tmdb_id: int) -> dict:
+    return make_request(f"tv/{tmdb_id}/credits")
 
 if __name__ == "__main__":
     # 127358 is ID for The Veil (검은 태양)
