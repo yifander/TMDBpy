@@ -1,15 +1,21 @@
 from database import get_connection
-from tmdb.drama_api import fetch_episodes
+from tmdb.drama_api import fetch_episodes, get_season_count
 
 
-def insert_episodes(drama_id: str, tmdb_id: int, season_number: int = 1) -> None:
+def insert_episodes_for_season(
+    drama_id: str, 
+    tmdb_id: int, 
+    season_number: int
+) -> int:
     episodes = fetch_episodes(tmdb_id, season_number)
     
     if not episodes:
-        print(f"no episodes found for season {season_number}")
-        return
+        print(f"  Season {season_number}: no episodes found")
+        return 0
     
     conn = None
+    inserted = 0
+    
     try:
         conn = get_connection()
         cur = conn.cursor()
@@ -41,30 +47,49 @@ def insert_episodes(drama_id: str, tmdb_id: int, season_number: int = 1) -> None
                 ep.get("vote_count"),
                 ep.get("still_path")
             ))
+            inserted += 1
         
         conn.commit()
         cur.close()
-        print(f"inserted {len(episodes)} episodes for season {season_number}")
+        print(f"season {season_number}: {inserted} episodes")
+        return inserted
         
     except Exception as e:
         if conn:
             conn.rollback()
-        print(f"episode insert error: {e}")
+        print(f"season {season_number} error: {e}")
         raise
     finally:
         if conn:
             conn.close()
 
 
+def insert_all_episodes(drama_id: str, tmdb_id: int, total_seasons: int) -> int:
+    print(f"\ninserting episodes for {total_seasons} season(s)...")
+    
+    total = 0
+    for season in range(1, total_seasons + 1):
+        count = insert_episodes_for_season(drama_id, tmdb_id, season)
+        total += count
+    
+    print(f"total: {total} episodes across {total_seasons} season(s)")
+    return total
+
+
 if __name__ == "__main__":
     from ingest import insert_drama
     from tmdb.drama_api import fetch_drama
     
-    # The Veil
-    drama = fetch_drama(127358)
+    # Hospital Playlist (슬기로운 의사생활)
+    # using this as an example since it has two seasons
+    TEST_DRAMA_ID = 96102
+
+    drama = fetch_drama(TEST_DRAMA_ID)
     drama_id = insert_drama(drama)
-    
-    print(f"\ninserting episodes for drama {drama_id}...")
-    insert_episodes(drama_id, 127358, season_number=1)
+
+    total_seasons = get_season_count(TEST_DRAMA_ID)
+    print(f"Seasons detected: {total_seasons}")
+
+    insert_all_episodes(drama_id, TEST_DRAMA_ID, total_seasons)
     
     print("\nfinished")

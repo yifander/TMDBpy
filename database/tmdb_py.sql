@@ -10,6 +10,7 @@ create table if not exists dramas (
     original_language varchar(5) not null,
     first_air_date date,
     air_status varchar(20) not null default 'unknown',
+    total_seasons smallint,
     total_episodes smallint,
     synopsis text,
     tmdb_popularity_score decimal(10,3),

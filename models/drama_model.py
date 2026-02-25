@@ -21,6 +21,7 @@ class Drama(BaseModel):
     first_air_date: Optional[date] = None
     air_status: str = "unknown"
     total_episodes: Optional[int] = None
+    total_seasons: Optional[int] = None
     synopsis: Optional[str] = None
     titles: List[DramaTitle] = []
     genres: List[Genre] = []
@@ -89,6 +90,7 @@ class Drama(BaseModel):
             first_air_date=data.get("first_air_date"),
             air_status=air_status,
             total_episodes=data.get("number_of_episodes"),
+            total_seasons=data.get("number_of_seasons"),
             synopsis=data.get("overview"),
             titles=titles,
             genres=genres,
@@ -108,6 +110,7 @@ class Drama(BaseModel):
             "first_air_date": self.first_air_date,
             "air_status": self.air_status,
             "total_episodes": self.total_episodes,
+            "number_of_seasons": self.total_seasons,
             "synopsis": self.synopsis,
             "tmdb_popularity_score": self.tmdb_popularity,
             "tmdb_vote_average": self.tmdb_vote_average,

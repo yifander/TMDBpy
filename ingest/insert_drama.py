@@ -16,10 +16,10 @@ def insert_drama(drama: Drama) -> Optional[str]:
             INSERT INTO dramas (
                 tmdb_id, content_type, original_country,
                 original_language, first_air_date, air_status,
-                total_episodes, synopsis, tmdb_popularity_score,
-                tmdb_vote_average, tmdb_vote_count
+                total_seasons, total_episodes, synopsis,
+                tmdb_popularity_score, tmdb_vote_average, tmdb_vote_count
             ) VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
             )
             ON CONFLICT (tmdb_id) DO UPDATE SET
                 content_type = EXCLUDED.content_type,
@@ -27,6 +27,7 @@ def insert_drama(drama: Drama) -> Optional[str]:
                 original_language = EXCLUDED.original_language,
                 first_air_date = EXCLUDED.first_air_date,
                 air_status = EXCLUDED.air_status,
+                total_seasons = EXCLUDED.total_seasons,
                 total_episodes = EXCLUDED.total_episodes,
                 synopsis = EXCLUDED.synopsis,
                 tmdb_popularity_score = EXCLUDED.tmdb_popularity_score,
@@ -41,6 +42,7 @@ def insert_drama(drama: Drama) -> Optional[str]:
             drama.original_language,
             drama.first_air_date,
             drama.air_status,
+            drama.total_seasons,
             drama.total_episodes,
             drama.synopsis,
             drama.tmdb_popularity,

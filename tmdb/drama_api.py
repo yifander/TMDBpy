@@ -13,6 +13,18 @@ def fetch_episodes(tmdb_id: int, season_number: int = 1) -> List[Dict]:
     data = make_request(f"tv/{tmdb_id}/season/{season_number}")
     return data.get("episodes", [])
 
+def get_season_count(tmdb_id: int) -> int:
+    data = make_request(f"tv/{tmdb_id}")
+    seasons = data.get("seasons", [])
+    
+    valid_seasons = [
+        s for s in seasons 
+        if s.get("season_number", 0) > 0 
+        and "special" not in s.get("name", "").lower()
+    ]
+    
+    return len(valid_seasons)
+
 if __name__ == "__main__":
     # 127358 is ID for The Veil (검은 태양)
     drama = fetch_drama(127358)
