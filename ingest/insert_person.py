@@ -5,6 +5,9 @@ from database import get_connection
 from models import Person
 from tmdb.person_api import fetch_person
 
+# this file is somewhat redundant now that insert_credits handle person creation
+# however, this can still be directly called for individual needs
+
 def insert_person(person: Person) -> Optional[str]:
     conn = None
     try:
