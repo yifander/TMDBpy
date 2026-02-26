@@ -13,6 +13,10 @@ def fetch_episodes(tmdb_id: int, season_number: int = 1) -> List[Dict]:
     data = make_request(f"tv/{tmdb_id}/season/{season_number}")
     return data.get("episodes", [])
 
+def fetch_providers(tmdb_id: int) -> Dict[str, List[Dict]]:
+    data = make_request(f"tv/{tmdb_id}/watch/providers")
+    return data.get("results", {})
+
 def get_season_count(tmdb_id: int) -> int:
     data = make_request(f"tv/{tmdb_id}")
     seasons = data.get("seasons", [])

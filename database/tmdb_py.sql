@@ -100,3 +100,18 @@ create table if not exists episodes (
     
     unique(drama_id, season_number, episode_number)
 );
+
+create table if not exists watch_providers (
+    provider_id UUID primary key default uuid_generate_v4(),
+    drama_id UUID not null references dramas(drama_id) on delete cascade,
+    country_code char(5) not null,
+    service_name varchar(50) not null,
+    provider_type varchar(20) not null,
+    link_url text,
+    logo_path text,
+    display_priority integer,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now(),
+    
+    UNIQUE(drama_id, country_code, service_name, provider_type)
+);
