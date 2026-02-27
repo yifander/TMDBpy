@@ -2,7 +2,7 @@ import sys
 import argparse
 
 from database import get_connection
-from ingest.fetch_and_store import run as fetch_and_store
+from cli.fetch_drama import run as fetch_and_store
 
 
 def drama_exists(tmdb_id: str) -> bool:
