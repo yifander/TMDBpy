@@ -74,6 +74,18 @@ def insert_drama(drama: Drama) -> Optional[str]:
                 title.title,
                 title.is_primary
             ))
+
+        cur.execute(
+            "DELETE FROM drama_genres WHERE drama_id = %s",
+            (drama_id,)
+        )
+        
+        for genre in drama.genres:
+            cur.execute("""
+                INSERT INTO drama_genres (drama_id, genre)
+                VALUES (%s, %s)
+                ON CONFLICT DO NOTHING
+            """, (drama_id, genre))
         
         conn.commit()
         cur.close()

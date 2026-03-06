@@ -115,3 +115,11 @@ create table if not exists watch_providers (
     
     UNIQUE(drama_id, country_code, service_name, provider_type)
 );
+
+create table if not exists drama_genres (
+    drama_id UUID not null references dramas(drama_id) on delete cascade,
+    genre varchar(50) not null,
+    primary key (drama_id, genre)
+);
+
+create index idx_drama_genres_genre on drama_genres(genre);
